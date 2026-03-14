@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Art.Org</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Syne:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0a08;--bg2:#111110;--bg3:#1a1a17;
+  --line:#2a2a25;--text:#f0ede6;--text2:#9a9890;--text3:#4a4a45;
+  --gold:#c9a84c;--gold2:#e8d5a0;
+  --violet:#a78bfa;--accent:#7c3aed;
+  --green:#10b981;--red:#c0392b;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 44px;background:rgba(10,10,8,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--text);cursor:pointer;background:none;border:none;}
+.logo em{color:var(--gold);font-style:italic;}
+nav{display:flex;gap:24px;align-items:center;}
+.nav-a{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);text-decoration:none;cursor:pointer;background:none;border:none;font-family:'Syne',sans-serif;transition:color .2s;}
+.nav-a:hover{color:var(--gold);}
+.nav-cta{padding:7px 16px;border:1px solid var(--gold);border-radius:2px;color:var(--gold)!important;}
+.nav-cta:hover{background:var(--gold);color:var(--bg)!important;}
+.menu-btn{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.menu-btn span{width:20px;height:1.5px;background:var(--text);display:block;}
+.mob-nav{display:none;position:fixed;inset:0;top:55px;background:var(--bg);z-index:99;padding:28px 20px;flex-direction:column;gap:20px;}
+.mob-nav.open{display:flex;}
+.mob-nav button{font-size:18px;color:var(--text2);background:none;border:none;font-family:'Syne',sans-serif;font-weight:600;cursor:pointer;text-align:left;}
+
+/* HERO */
+.hero{min-height:calc(100vh - 55px);display:flex;align-items:center;padding:80px 44px 60px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:60px 60px;opacity:.22;}
+.hero-glow{position:absolute;top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,.05) 0%,transparent 70%);}
+.hc{position:relative;z-index:2;max-width:820px;}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:24px;}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--gold);}
+.htitle{font-family:'Playfair Display',serif;font-size:clamp(48px,8vw,100px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:28px;}
+.htitle .it{font-style:italic;color:var(--gold);display:block;}
+.hsub{font-family:'Lora',serif;font-size:17px;color:var(--text2);line-height:1.7;max-width:480px;margin-bottom:40px;}
+.hbtns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-gold{padding:12px 26px;background:var(--gold);color:var(--bg);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:all .2s;}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);}
+.btn-gh{padding:12px 26px;background:transparent;border:1px solid var(--line);color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border-radius:2px;cursor:pointer;transition:all .2s;}
+.btn-gh:hover{border-color:var(--gold);color:var(--gold);}
+.hstats{position:absolute;bottom:36px;right:44px;display:flex;gap:32px;}
+.snum{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;}
+.slbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-top:2px;}
+
+/* SECTIONS */
+.sec{padding:72px 44px;}
+.sec.alt{background:var(--bg2);}
+.divider{height:1px;background:var(--line);margin:0 44px;}
+.sec-lbl{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px;}
+.sec-lbl::before{content:'';width:22px;height:1px;background:var(--gold);}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,56px);font-weight:900;line-height:1.0;letter-spacing:-1.5px;}
+.sec-title em{font-style:italic;color:var(--gold);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:64px;align-items:center;margin-top:48px;}
+.photo-frame{width:100%;aspect-ratio:3/4;background:var(--bg3);border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.photo-wrap{position:relative;}
+.photo-frame::after{content:'';position:absolute;top:12px;right:-12px;bottom:-12px;left:12px;border:1px solid var(--gold);border-radius:4px;z-index:-1;}
+.photo-init{font-family:'Playfair Display',serif;font-size:72px;font-weight:900;color:var(--line);font-style:italic;}
+.photo-badge{position:absolute;bottom:-14px;right:-14px;width:84px;height:84px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;}
+.photo-badge span{font-size:8.5px;font-weight:800;color:var(--bg);letter-spacing:.8px;text-transform:uppercase;line-height:1.3;}
+.about-bio{font-family:'Lora',serif;font-size:15px;color:var(--text2);line-height:1.8;margin:24px 0;}
+.about-bio strong{color:var(--text);font-weight:600;}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+.tag{padding:5px 11px;border:1px solid var(--line);border-radius:2px;font-size:10px;font-weight:600;color:var(--text3);}
+.tag.hl{border-color:var(--gold);color:var(--gold);}
+.alinks{display:flex;gap:14px;flex-wrap:wrap;}
+.alink{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .2s;background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;}
+.alink:hover{color:var(--gold);}
+.alink::after{content:'↗';}
+
+/* TOOLS */
+.tools-hdr{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:14px;}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;}
+.tc{background:var(--bg2);padding:32px;border:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer;transition:all .3s;}
+.tc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.tc:hover{background:var(--bg3);}
+.tc:hover::before{transform:scaleX(1);}
+.tc.wide{grid-column:span 2;}
+.tc.dim{opacity:.4;pointer-events:none;}
+.ticon{width:44px;height:44px;border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px;background:var(--bg);}
+.tbadge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:12px;}
+.tb-new{background:rgba(201,168,76,.12);color:var(--gold);}
+.tb-free{background:rgba(16,185,129,.12);color:#10b981;}
+.tb-soon{background:rgba(74,74,69,.3);color:var(--text3);}
+.tname{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:7px;}
+.tdesc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px;}
+.tfooter{display:flex;align-items:center;justify-content:space-between;}
+.tstat{font-size:11px;color:var(--text3);}
+.tarr{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:13px;transition:all .2s;}
+.tc:hover .tarr{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:48px;align-items:start;}
+.cbio{font-family:'Lora',serif;font-size:16px;color:var(--text2);line-height:1.8;margin:18px 0 32px;}
+.ci{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line);}
+.ci:last-child{border-bottom:none;}
+.ci-icon{width:36px;height:36px;min-width:36px;background:var(--bg3);border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.ci-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.ci-val{font-size:13px;color:var(--text);}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.fg input,.fg textarea,.fg select{width:100%;padding:11px 13px;background:var(--bg3);border:1px solid var(--line);border-radius:2px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;transition:border .2s;}
+.fg input:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg textarea{resize:vertical;min-height:100px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-submit{width:100%;padding:13px;background:var(--gold);color:var(--bg);border:none;border-radius:2px;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-submit:hover{background:var(--gold2);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{padding:32px 44px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.flogo{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;}
+.flogo em{color:var(--gold);font-style:italic;}
+.fcopy{font-size:11px;color:var(--text3);}
+.flinks{display:flex;gap:18px;}
+.flinks button{font-size:11px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:color .2s;}
+.flinks button:hover{color:var(--gold);}
+
+/* ===== FILMS PAGE ===== */
+.films-hero{padding:60px 44px 44px;text-align:center;background:var(--bg2);border-bottom:1px solid var(--line);position:relative;overflow:hidden;}
+.films-hero::before{content:'✝';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:300px;color:rgba(124,58,237,.03);pointer-events:none;font-family:serif;}
+.f-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:16px;background:rgba(167,139,250,.08);padding:5px 14px;border-radius:20px;border:1px solid rgba(167,139,250,.15);}
+.ftitle{font-family:'Playfair Display',serif;font-size:clamp(34px,6vw,66px);font-weight:900;line-height:1.0;letter-spacing:-2px;margin-bottom:14px;}
+.ftitle em{font-style:italic;color:var(--violet);}
+.fsub{font-family:'Lora',serif;font-size:15px;color:var(--text2);line-height:1.7;max-width:480px;margin:0 auto 28px;}
+.fstats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+.fsn{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--violet);}
+.fsl{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+
+.fbar{padding:14px 44px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:9px;flex-wrap:wrap;position:sticky;top:55px;z-index:90;background:rgba(10,10,8,.97);backdrop-filter:blur(8px);}
+.sw{flex:1;min-width:160px;max-width:260px;position:relative;}
+.sw input{width:100%;padding:7px 11px 7px 30px;background:var(--bg3);border:1px solid var(--line);border-radius:5px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;transition:border .2s;}
+.sw input:focus{border-color:var(--violet);}
+.sw::before{content:'🔍';position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:11px;pointer-events:none;}
+.fbtns{display:flex;gap:6px;flex-wrap:wrap;}
+.fbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--line);background:transparent;font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .2s;}
+.fbtn:hover{border-color:var(--violet);color:var(--violet);}
+.fbtn.on{background:var(--accent);border-color:var(--accent);color:white;}
+.ssel{padding:6px 10px;background:var(--bg3);border:1px solid var(--line);border-radius:5px;color:var(--text2);font-family:'Syne',sans-serif;font-size:11px;outline:none;cursor:pointer;margin-left:auto;}
+
+.fbody{padding:32px 44px 64px;}
+.ghdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.ghdr h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.ghdr h2 em{font-style:italic;color:var(--violet);}
+.gcnt{font-size:11px;color:var(--text3);}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:16px;}
+
+.fcard{background:var(--bg2);border:1px solid var(--line);border-radius:7px;overflow:hidden;cursor:pointer;transition:all .3s;position:relative;}
+.fcard:hover{transform:translateY(-3px);border-color:var(--violet);box-shadow:0 8px 28px rgba(124,58,237,.14);}
+.fthumb{aspect-ratio:2/3;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.femoji{font-size:40px;}
+.fovr{position:absolute;inset:0;background:linear-gradient(to top,rgba(9,9,14,.95) 0%,transparent 60%);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center;}
+.fcard:hover .fovr{opacity:1;}
+.fplay{width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:white;}
+.fbadge{position:absolute;top:7px;left:7px;padding:2px 6px;border-radius:3px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;}
+.fb-free{background:rgba(16,185,129,.88);color:white;}
+.fb-new{background:rgba(167,139,250,.88);color:white;top:26px;}
+.fb-serie{background:rgba(192,57,43,.85);color:white;top:auto;bottom:7px;}
+.finfo{padding:11px;}
+.fname{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.3;}
+.fmeta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.fcat{display:inline-block;margin-top:5px;padding:2px 7px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.15);border-radius:3px;font-size:9px;color:var(--violet);font-weight:600;}
+.adm-btns{display:flex;gap:5px;margin-top:7px;}
+.adm-btns button{flex:1;padding:4px;background:var(--bg);border:1px solid var(--line);border-radius:3px;color:var(--text2);font-family:'Syne',sans-serif;font-size:10px;cursor:pointer;}
+.adm-btns button:last-child{flex:none;padding:4px 7px;background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);color:#ef4444;}
+
+/* FEATURED */
+.ffeat{background:var(--bg2);border:1px solid var(--line);border-radius:9px;overflow:hidden;display:grid;grid-template-columns:180px 1fr;margin-bottom:32px;cursor:pointer;transition:border-color .3s;}
+.ffeat:hover{border-color:var(--violet);}
+.ffthumb{background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;min-height:180px;}
+.ffbadge{position:absolute;top:9px;left:9px;padding:3px 9px;border-radius:3px;background:var(--accent);font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:white;}
+.ffinfo{padding:24px;}
+.ffcat{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--violet);margin-bottom:7px;}
+.fftitle{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:7px;line-height:1.2;}
+.ffdesc{font-family:'Lora',serif;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
+.ffmeta{display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+.ffmeta span{font-size:11px;color:var(--text3);}
+.ffmeta strong{color:var(--text);font-weight:600;}
+.btn-watch{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;background:var(--accent);color:white;border:none;border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-watch:hover{background:#6d28d9;}
+
+/* EMPTY */
+.empty{text-align:center;padding:56px 20px;grid-column:1/-1;}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.empty p{color:var(--text3);font-size:13px;}
+
+/* ===== MODALS ===== */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(5px);padding:16px;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--line);border-radius:9px;width:90%;max-width:540px;max-height:90vh;overflow-y:auto;}
+.mtop{padding:18px 18px 0;display:flex;justify-content:space-between;align-items:flex-start;}
+.mx{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;transition:color .2s;padding:0;}
+.mx:hover{color:var(--text);}
+.mthumb{width:100%;aspect-ratio:16/9;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:56px;margin:12px 0;}
+.mbody{padding:0 18px 20px;}
+.mname{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:7px;}
+.mmeta{display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.mmeta span{font-size:11px;color:var(--text3);}
+.mdesc{font-family:'Lora',serif;font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
+.macts{display:flex;gap:7px;flex-wrap:wrap;}
+.mp{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;background:var(--accent);color:white;border:none;border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;}
+.mp:hover{background:#6d28d9;}
+.ms{padding:9px 14px;background:var(--bg3);color:var(--text2);border:1px solid var(--line);border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;}
+.ms:hover{border-color:var(--violet);color:var(--violet);}
+
+/* ADMIN MODAL */
+.amod{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;}
+.amod.open{display:flex;}
+.abox{background:var(--bg2);border:1px solid var(--line);border-radius:9px;width:90%;max-width:500px;max-height:88vh;overflow-y:auto;padding:28px;}
+.abox h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:20px;}
+.af{margin-bottom:12px;}
+.af label{display:block;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.af input,.af textarea,.af select{width:100%;padding:8px 11px;background:var(--bg3);border:1px solid var(--line);border-radius:5px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;transition:border .2s;}
+.af input:focus,.af textarea:focus{border-color:var(--violet);}
+.af textarea{resize:vertical;min-height:65px;}
+.ar{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.aa{display:flex;gap:9px;margin-top:16px;}
+.as{flex:1;padding:10px;background:var(--accent);color:white;border:none;border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.as:hover{background:#6d28d9;}
+.ac{padding:10px 16px;background:transparent;color:var(--text2);border:1px solid var(--line);border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;}
+
+/* LOGIN */
+.lmod{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.lmod.open{display:flex;}
+.lbox{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:40px;width:90%;max-width:340px;text-align:center;}
+.lbox h3{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:5px;}
+.lbox p{font-size:12px;color:var(--text3);margin-bottom:24px;}
+.lbox input{width:100%;padding:10px 13px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--line);border-radius:5px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;transition:border .2s;}
+.lbox input:focus{border-color:var(--gold);}
+.lbtn{width:100%;padding:12px;background:var(--gold);color:var(--bg);border:none;border-radius:5px;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:9px;}
+.lbtn:hover{background:var(--gold2);}
+.lcan{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:'Syne',sans-serif;}
+.lerr{color:#ef4444;font-size:12px;margin-bottom:9px;display:none;}
+
+/* ADMIN PILLS */
+.adm-pill{position:fixed;bottom:20px;left:20px;z-index:150;padding:7px 14px;background:var(--bg3);border:1px solid var(--line);border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif;}
+.adm-pill:hover{border-color:var(--gold);color:var(--gold);}
+.adm-fab{position:fixed;bottom:20px;right:20px;z-index:150;flex-direction:column;gap:7px;align-items:flex-end;display:none;}
+.adm-fab.show{display:flex;}
+.fab{display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:40px;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:all .2s;}
+.fab-v{background:var(--accent);color:white;}
+.fab-v:hover{transform:scale(1.04);}
+.fab-o{background:var(--bg3);color:var(--text2);border:1px solid var(--line)!important;}
+.fab-o:hover{border-color:var(--gold)!important;color:var(--gold);}
+
+/* TOAST */
+.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);padding:10px 20px;border-radius:5px;font-size:12px;font-weight:700;opacity:0;transition:all .3s;z-index:500;pointer-events:none;}
+.tg{background:var(--gold);color:var(--bg);}
+.tv{background:var(--accent);color:white;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* CV */
+#cv-app{background:var(--bg);}
+
+@media(max-width:860px){
+  .tc.wide{grid-column:span 1;}
+  .about-grid,.contact-grid{grid-template-columns:1fr;}
+  .ffeat{grid-template-columns:1fr;}
+  .ffthumb{aspect-ratio:16/9;min-height:130px;}
+}
+@media(max-width:640px){
+  header{padding:13px 16px;}
+  nav{display:none;}
+  .menu-btn{display:flex;}
+  .hero,.sec,.films-hero,.fbody{padding-left:16px;padding-right:16px;}
+  .fbar{padding:12px 16px;top:49px;}
+  .divider{margin:0 16px;}
+  footer{padding:22px 16px;}
+  .hstats{display:none;}
+  .frow{grid-template-columns:1fr;}
+  .fgrid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="logo" onclick="go('home')">Art<em>.</em>Org</button>
+  <nav>
+    <button class="nav-a" onclick="go('home');scr('about')">À propos</button>
+    <button class="nav-a" onclick="go('home');scr('tools')">Outils</button>
+    <button class="nav-a" onclick="go('films')">Films chrétiens</button>
+    <button class="nav-a" onclick="go('home');scr('contact')">Contact</button>
+    <button class="nav-a nav-cta" onclick="go('films')">Explorer</button>
+  </nav>
+  <button class="menu-btn" onclick="document.getElementById('mobn').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+<div class="mob-nav" id="mobn">
+  <button onclick="go('home');document.getElementById('mobn').classList.remove('open')">Accueil</button>
+  <button onclick="go('home');scr('about');document.getElementById('mobn').classList.remove('open')">À propos</button>
+  <button onclick="go('home');scr('tools');document.getElementById('mobn').classList.remove('open')">Outils</button>
+  <button onclick="go('films');document.getElementById('mobn').classList.remove('open')">Films chrétiens</button>
+  <button onclick="go('home');scr('contact');document.getElementById('mobn').classList.remove('open')">Contact</button>
+</div>
+
+<!-- ===== HOME ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-grid"></div><div class="hero-glow"></div>
+    <div class="hc">
+      <div class="eyebrow">Art.Org — Solutions Digitales</div>
+      <h1 class="htitle">Des outils<span class="it">qui changent</span>les vies.</h1>
+      <p class="hsub" id="hero-tagline">Outils numériques gratuits et accessibles, créés pour aider chaque Malagasy à avancer — dans sa carrière, ses finances, et sa vie.</p>
+      <div class="hbtns">
+        <button class="btn-gold" onclick="scr('tools')">Découvrir les outils</button>
+        <button class="btn-gh" onclick="scr('about')">En savoir plus</button>
+      </div>
+    </div>
+    <div class="hstats">
+      <div><div class="snum">4</div><div class="slbl">Outils créés</div></div>
+      <div><div class="snum">100%</div><div class="slbl">Gratuit</div></div>
+      <div><div class="snum">🇲🇬</div><div class="slbl">Made in Mada</div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="sec alt" id="about">
+    <div class="sec-lbl">À propos</div>
+    <div class="about-grid">
+      <div class="photo-wrap">
+        <div class="photo-frame"><div class="photo-init" id="p-init-disp">A</div></div>
+        <div class="photo-badge"><span id="p-badge-disp">Créateur<br>Digital</span></div>
+      </div>
+      <div>
+        <h2 class="sec-title">Qui suis-<em>je</em> ?</h2>
+        <p class="about-bio" id="p-bio-disp">Je suis <strong id="p-name-disp">le créateur d'Art.Org</strong>, passionné par la création d'outils numériques utiles pour tous. Ma mission : <strong>démocratiser les outils digitaux</strong> en Madagascar.</p>
+        <div class="tags"><span class="tag hl">Développeur</span><span class="tag hl">Créateur de contenu</span><span class="tag">Madagascar</span><span class="tag">Innovation</span><span class="tag">Impact social</span></div>
+        <div class="alinks">
+          <a class="alink" id="lnk-li" href="#" target="_blank">LinkedIn</a>
+          <a class="alink" id="lnk-gh" href="#" target="_blank">GitHub</a>
+          <button class="alink" onclick="scr('contact')">Me contacter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="sec" id="tools">
+    <div class="tools-hdr">
+      <div><div class="sec-lbl">Nos outils</div><h2 class="sec-title">Créés pour <em>vous</em></h2></div>
+      <p style="font-size:13px;color:var(--text3);max-width:240px;line-height:1.6;">Gratuits et accessibles sans inscription.</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tc wide" onclick="go('cv')">
+        <div class="ticon">📄</div><span class="tbadge tb-new">★ Nouveau</span>
+        <div class="tname">CV Builder</div>
+        <div class="tdesc">Créez un CV professionnel en quelques minutes. Téléchargement PDF inclus. Conçu pour le marché malagasy.</div>
+        <div class="tfooter"><span class="tstat">Outil carrière</span><div class="tarr">→</div></div>
+      </div>
+      <div class="tc" onclick="go('films')">
+        <div class="ticon">🎬</div><span class="tbadge tb-free">Gratuit</span>
+        <div class="tname">Films Chrétiens</div>
+        <div class="tdesc">Collection de films et séries chrétiens gratuits, sélectionnés pour nourrir votre foi.</div>
+        <div class="tfooter"><span class="tstat">Foi & inspiration</span><div class="tarr">→</div></div>
+      </div>
+      <div class="tc dim">
+        <div class="ticon">✉️</div><span class="tbadge tb-soon">Bientôt</span>
+        <div class="tname">Lettre de Motivation</div>
+        <div class="tdesc">Générez une lettre de motivation personnalisée en quelques clics.</div>
+        <div class="tfooter"><span class="tstat">En développement</span><div class="tarr">→</div></div>
+      </div>
+      <div class="tc dim">
+        <div class="ticon">🎯</div><span class="tbadge tb-soon">Bientôt</span>
+        <div class="tname">Simulateur Entretien</div>
+        <div class="tdesc">Préparez vos entretiens grâce à notre bot intelligent.</div>
+        <div class="tfooter"><span class="tstat">En développement</span><div class="tarr">→</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="sec alt" id="contact">
+    <div class="sec-lbl">Contact</div>
+    <div class="contact-grid">
+      <div>
+        <h2 class="sec-title">Parlons <em>ensemble</em></h2>
+        <p class="cbio">Une idée, une suggestion, ou vous voulez collaborer ? Je suis toujours disponible.</p>
+        <div class="ci"><div class="ci-icon">✉</div><div><div class="ci-lbl">Email</div><div class="ci-val" id="ci-email">contact@art.org</div></div></div>
+        <div class="ci"><div class="ci-icon">📞</div><div><div class="ci-lbl">Téléphone</div><div class="ci-val" id="ci-phone">+261 34 000 0000</div></div></div>
+        <div class="ci"><div class="ci-icon">📍</div><div><div class="ci-lbl">Localisation</div><div class="ci-val" id="ci-city">Antananarivo, Madagascar</div></div></div>
+      </div>
+      <div>
+        <div class="frow"><div class="fg"><label>Nom</label><input placeholder="Rakoto Jean"></div><div class="fg"><label>Email</label><input placeholder="email@..."></div></div>
+        <div class="fg"><label>Sujet</label><select><option>Collaboration</option><option>Suggestion</option><option>Bug</option><option>Autre</option></select></div>
+        <div class="fg"><label>Message</label><textarea placeholder="Votre message..."></textarea></div>
+        <button class="btn-submit" onclick="toast('✓ Message envoyé !','g')">Envoyer le message</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="flogo">Art<em>.</em>Org</div>
+    <div class="fcopy">© 2025 Art.Org — Made with ♥ in Madagascar</div>
+    <div class="flinks">
+      <button onclick="scr('home')">Accueil</button>
+      <button onclick="scr('about')">À propos</button>
+      <button onclick="scr('tools')">Outils</button>
+      <button onclick="go('films')">Films</button>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== FILMS PAGE ===== -->
+<div class="page" id="page-films">
+  <div class="films-hero">
+    <div class="f-eyebrow">✝ Films & Séries Chrétiens</div>
+    <h1 class="ftitle">Nourrissez votre <em>foi</em></h1>
+    <p class="fsub">Collection de films et séries chrétiens soigneusement sélectionnés — gratuits, inspirants, accessibles à tous.</p>
+    <div class="fstats">
+      <div><div class="fsn" id="fstat-tot">0</div><div class="fsl">Films & Séries</div></div>
+      <div><div class="fsn">100%</div><div class="fsl">Gratuit</div></div>
+      <div><div class="fsn">🙏</div><div class="fsl">Foi & Inspiration</div></div>
+    </div>
+  </div>
+  <div class="fbar">
+    <div class="sw"><input id="fsearch" type="text" placeholder="Rechercher..." oninput="renderFilms()"></div>
+    <div class="fbtns">
+      <button class="fbtn on" onclick="setFF('tous',this)">Tous</button>
+      <button class="fbtn" onclick="setFF('film',this)">Films</button>
+      <button class="fbtn" onclick="setFF('serie',this)">Séries</button>
+      <button class="fbtn" onclick="setFF('documentaire',this)">Docs</button>
+      <button class="fbtn" onclick="setFF('animation',this)">Animation</button>
+    </div>
+    <select class="ssel" id="fsort" onchange="renderFilms()">
+      <option value="recent">Plus récents</option>
+      <option value="alpha">A — Z</option>
+      <option value="rating">Mieux notés</option>
+    </select>
+  </div>
+  <div class="fbody">
+    <div id="ffeat"></div>
+    <div class="ghdr"><h2>Tous les <em>contenus</em></h2><span class="gcnt" id="fcnt">0 résultat</span></div>
+    <div class="fgrid" id="fgrid"></div>
+  </div>
+  <footer>
+    <div class="flogo">Art<em>.</em>Org</div>
+    <div class="fcopy">© 2025 Art.Org</div>
+    <div class="flinks"><button onclick="go('home')">← Accueil</button><button onclick="go('home');scr('tools')">Outils</button></div>
+  </footer>
+</div>
+
+<!-- ===== CV PAGE ===== -->
+<div class="page" id="page-cv">
+  <div style="padding:24px 40px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:var(--bg2);">
+    <div><div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;">Outil Carrière</div><h1 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;">CV Builder</h1></div>
+    <button class="btn-gh" onclick="go('home')">← Accueil</button>
+  </div>
+  <div id="cv-app"></div>
+</div>
+
+<!-- FILM DETAIL MODAL -->
+<div class="overlay" id="film-overlay" onclick="if(event.target===this)cfd()">
+  <div class="modal">
+    <div class="mtop"><div></div><button class="mx" onclick="cfd()">×</button></div>
+    <div class="mthumb" id="fd-thumb"></div>
+    <div class="mbody">
+      <div class="mname" id="fd-name"></div>
+      <div class="mmeta" id="fd-meta"></div>
+      <div class="mdesc" id="fd-desc"></div>
+      <div class="macts" id="fd-acts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD FILM MODAL -->
+<div class="amod" id="afilm-modal">
+  <div class="abox">
+    <h3 id="afilm-title">Ajouter un film</h3>
+    <div class="af"><label>Titre</label><input id="af-ti" placeholder="La Passion du Christ"></div>
+    <div class="ar">
+      <div class="af"><label>Type</label><select id="af-ty"><option value="film">Film</option><option value="serie">Série</option><option value="documentaire">Documentaire</option><option value="animation">Animation</option></select></div>
+      <div class="af"><label>Année</label><input id="af-yr" type="number" placeholder="2004"></div>
+    </div>
+    <div class="af"><label>Description</label><textarea id="af-de" placeholder="Résumé..."></textarea></div>
+    <div class="ar">
+      <div class="af"><label>Durée</label><input id="af-du" placeholder="2h07"></div>
+      <div class="af"><label>Note</label><select id="af-ra"><option value="5">⭐⭐⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="3">⭐⭐⭐</option></select></div>
+    </div>
+    <div class="af"><label>Icône</label><select id="af-em"><option value="✝️">✝️ Croix</option><option value="🙏">🙏 Prière</option><option value="📖">📖 Bible</option><option value="👑">👑 Roi</option><option value="🕊️">🕊️ Colombe</option><option value="🌟">🌟 Étoile</option><option value="⛪">⛪ Église</option><option value="🕯️">🕯️ Bougie</option><option value="👼">👼 Ange</option><option value="🎬">🎬 Film</option></select></div>
+    <div class="af"><label>Lien (YouTube...)</label><input id="af-li" placeholder="https://youtube.com/..."></div>
+    <div class="af"><label>Lien alternatif (optionnel)</label><input id="af-l2" placeholder="https://..."></div>
+    <div class="ar">
+      <div class="af"><label>Nouveau ?</label><select id="af-ne"><option value="true">Oui</option><option value="false">Non</option></select></div>
+      <div class="af"><label>À la une ?</label><select id="af-fe"><option value="false">Non</option><option value="true">Oui</option></select></div>
+    </div>
+    <div class="aa"><button class="as" onclick="saveFilm()">Enregistrer</button><button class="ac" onclick="document.getElementById('afilm-modal').classList.remove('open')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- PROFILE EDIT MODAL -->
+<div class="amod" id="prof-modal">
+  <div class="abox">
+    <h3>Modifier mon profil</h3>
+    <div class="af"><label>Nom complet</label><input id="pp-na" placeholder="Rakoto Jean"></div>
+    <div class="af"><label>Titre / Rôle</label><input id="pp-ba" placeholder="Développeur & Créateur"></div>
+    <div class="af"><label>Initiales</label><input id="pp-in" placeholder="RJ" maxlength="3"></div>
+    <div class="af"><label>Bio</label><textarea id="pp-bi" placeholder="Décrivez-vous..."></textarea></div>
+    <div class="af"><label>Tagline accueil</label><textarea id="pp-ta" placeholder="Votre slogan..."></textarea></div>
+    <div class="af"><label>Email</label><input id="pp-em" placeholder="contact@art.org"></div>
+    <div class="af"><label>Téléphone</label><input id="pp-ph" placeholder="+261 34..."></div>
+    <div class="af"><label>Ville</label><input id="pp-ci" placeholder="Antananarivo, Madagascar"></div>
+    <div class="af"><label>LinkedIn</label><input id="pp-li" placeholder="https://linkedin.com/in/..."></div>
+    <div class="af"><label>GitHub / Portfolio</label><input id="pp-gi" placeholder="https://github.com/..."></div>
+    <div class="aa"><button class="as" onclick="saveProfile()">Enregistrer</button><button class="ac" onclick="document.getElementById('prof-modal').classList.remove('open')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="lmod" id="lmod">
+  <div class="lbox">
+    <h3>Administration</h3>
+    <p>Accès réservé au gérant du site</p>
+    <div class="lerr" id="lerr">Mot de passe incorrect</div>
+    <input type="password" id="lpass" placeholder="Mot de passe..." onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="lbtn" onclick="doLogin()">Se connecter</button>
+    <button class="lcan" onclick="document.getElementById('lmod').classList.remove('open');document.getElementById('lpass').value='';document.getElementById('lerr').style.display='none'">Annuler</button>
+  </div>
+</div>
+
+<button class="adm-pill" id="adm-pill" onclick="document.getElementById('lmod').classList.add('open');setTimeout(()=>document.getElementById('lpass').focus(),100)">Admin</button>
+<div class="adm-fab" id="adm-fab">
+  <button class="fab fab-v" id="fab-main" onclick="fabAct()">＋ Ajouter un film</button>
+  <button class="fab fab-o" onclick="openProf()">✏️ Mon profil</button>
+</div>
+<div class="toast" id="toastEl"></div>
+
+<script>
+const PASS='artorg2025';
+let isAdmin=false,curPage='home',editFId=null,filmFilter='tous';
+let profile=JSON.parse(localStorage.getItem('ao-p')||'{}');
+let films=JSON.parse(localStorage.getItem('ao-f')||'null');
+if(!films){
+  films=[
+    {id:1,title:"La Passion du Christ",type:"film",year:2004,desc:"La représentation des dernières heures de Jésus-Christ, depuis son arrestation jusqu'à sa crucifixion et sa résurrection. Un film bouleversant et historique.",duration:"2h07",rating:5,emoji:"✝️",link:"https://www.youtube.com/results?search_query=la+passion+du+christ+film+complet",link2:"",isNew:false,featured:true},
+    {id:2,title:"Guerre Sainte",type:"film",year:2011,desc:"Un film inspirant sur la foi inébranlable face aux épreuves de la vie. Basé sur une histoire vraie.",duration:"1h48",rating:5,emoji:"🙏",link:"https://www.youtube.com/results?search_query=film+chretien+gratuit+complet",link2:"",isNew:false,featured:false},
+    {id:3,title:"La Bible — Série complète",type:"serie",year:2013,desc:"Série dramatique retraçant les plus grands récits de la Bible, de la Genèse à l'Apocalypse.",duration:"10 épisodes",rating:5,emoji:"📖",link:"https://www.youtube.com/results?search_query=la+bible+serie+complete+francais",link2:"",isNew:true,featured:false},
+    {id:4,title:"Dieu n'est pas mort",type:"film",year:2014,desc:"Un étudiant chrétien doit défendre sa foi face à un professeur athée. Un film fort et engagé.",duration:"1h53",rating:4,emoji:"👑",link:"https://www.youtube.com/results?search_query=dieu+n+est+pas+mort+film",link2:"",isNew:false,featured:false},
+    {id:5,title:"Foi & Humanité",type:"documentaire",year:2020,desc:"Comment la spiritualité a guidé des hommes dans les moments les plus sombres de l'humanité.",duration:"1h20",rating:4,emoji:"🕊️",link:"https://www.youtube.com/results?search_query=documentaire+foi+chretienne+gratuit",link2:"",isNew:false,featured:false},
+    {id:6,title:"Veggie Tales",type:"animation",year:2000,desc:"Série d'animation chrétienne pour enfants : des légumes racontent des histoires bibliques avec humour.",duration:"Série",rating:5,emoji:"🌿",link:"https://www.youtube.com/results?search_query=veggie+tales+francais",link2:"",isNew:true,featured:false},
+  ];
+  localStorage.setItem('ao-f',JSON.stringify(films));
+}
+
+function go(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  window.scrollTo(0,0);curPage=p;
+  document.getElementById('fab-main').textContent=p==='films'?'＋ Ajouter un film':'✏️ Mon profil';
+  if(p==='films')renderFilms();
+  if(p==='cv')renderCV();
+  applyP();
+}
+function scr(id){
+  go('home');
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});},120);
+}
+
+// PROFILE
+function applyP(){
+  if(profile.name){document.getElementById('p-name-disp').textContent=profile.name;}
+  if(profile.initials||profile.name){document.getElementById('p-init-disp').textContent=profile.initials||(profile.name||'A').charAt(0).toUpperCase();}
+  if(profile.badge){document.getElementById('p-badge-disp').innerHTML=profile.badge.replace(' ','<br>');}
+  if(profile.bio){document.getElementById('p-bio-disp').innerHTML=profile.bio;}
+  if(profile.tagline){document.getElementById('hero-tagline').textContent=profile.tagline;}
+  if(profile.email){document.getElementById('ci-email').textContent=profile.email;}
+  if(profile.phone){document.getElementById('ci-phone').textContent=profile.phone;}
+  if(profile.city){document.getElementById('ci-city').textContent=profile.city;}
+  if(profile.linkedin){document.getElementById('lnk-li').href=profile.linkedin;}
+  if(profile.github){document.getElementById('lnk-gh').href=profile.github;}
+}
+function openProf(){
+  ['na','ba','in','bi','ta','em','ph','ci','li','gi'].forEach(k=>{
+    const map={na:'name',ba:'badge',in:'initials',bi:'bio',ta:'tagline',em:'email',ph:'phone',ci:'city',li:'linkedin',gi:'github'};
+    document.getElementById('pp-'+k).value=profile[map[k]]||'';
+  });
+  document.getElementById('prof-modal').classList.add('open');
+}
+function saveProfile(){
+  const map={na:'name',ba:'badge',in:'initials',bi:'bio',ta:'tagline',em:'email',ph:'phone',ci:'city',li:'linkedin',gi:'github'};
+  ['na','ba','in','bi','ta','em','ph','ci','li','gi'].forEach(k=>profile[map[k]]=document.getElementById('pp-'+k).value);
+  localStorage.setItem('ao-p',JSON.stringify(profile));
+  applyP();document.getElementById('prof-modal').classList.remove('open');
+  toast('✓ Profil mis à jour !','g');
+}
+
+// AUTH
+function doLogin(){
+  if(document.getElementById('lpass').value===PASS){
+    isAdmin=true;document.getElementById('lmod').classList.remove('open');
+    document.getElementById('adm-fab').classList.add('show');
+    document.getElementById('adm-pill').style.display='none';
+    toast('✓ Mode admin activé','g');
+    if(curPage==='films')renderFilms();
+  } else {
+    document.getElementById('lerr').style.display='block';
+    document.getElementById('lpass').value='';
+  }
+}
+function fabAct(){if(curPage==='films')openAF();else openProf();}
+
+// FILMS
+function stars(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+function saveF(){localStorage.setItem('ao-f',JSON.stringify(films));}
+function renderFeatured(){
+  const w=document.getElementById('ffeat');
+  const f=films.find(x=>x.featured);
+  if(!f){w.innerHTML='';return;}
+  w.innerHTML=`<div class="ffeat" onclick="ofd(${f.id})">
+    <div class="ffthumb"><span>${f.emoji}</span><div class="ffbadge">★ À la une</div></div>
+    <div class="ffinfo">
+      <div class="ffcat">${f.type.toUpperCase()} • ${f.year}</div>
+      <div class="fftitle">${f.title}</div>
+      <div class="ffdesc">${f.desc}</div>
+      <div class="ffmeta"><span><strong>Durée</strong><br>${f.duration}</span><span><strong>Note</strong><br><span style="color:#fbbf24">${stars(f.rating)}</span></span></div>
+      <a class="btn-watch" href="${f.link}" target="_blank" onclick="event.stopPropagation()">▶ Regarder</a>
+      ${isAdmin?`<button onclick="event.stopPropagation();openAF(${f.id})" style="margin-left:8px;padding:8px 12px;background:var(--bg3);border:1px solid var(--line);border-radius:4px;color:var(--text2);font-family:Syne,sans-serif;font-size:11px;cursor:pointer;">✏️</button>`:''}
+    </div>
+  </div>`;
+}
+function renderFilms(){
+  renderFeatured();
+  const q=(document.getElementById('fsearch')||{value:''}).value.toLowerCase();
+  const sort=(document.getElementById('fsort')||{value:'recent'}).value;
+  let list=films.filter(f=>(filmFilter==='tous'||f.type===filmFilter)&&(!q||f.title.toLowerCase().includes(q)||f.desc.toLowerCase().includes(q)));
+  if(sort==='alpha')list.sort((a,b)=>a.title.localeCompare(b.title));
+  else if(sort==='rating')list.sort((a,b)=>b.rating-a.rating);
+  else list.sort((a,b)=>b.id-a.id);
+  const g=document.getElementById('fgrid');
+  const c=document.getElementById('fcnt');
+  const s=document.getElementById('fstat-tot');
+  if(s)s.textContent=films.length;
+  if(c)c.textContent=list.length+' résultat'+(list.length>1?'s':'');
+  if(!g)return;
+  if(!list.length){g.innerHTML=`<div class="empty"><div class="empty-icon">🎬</div><p>Aucun contenu.${isAdmin?' Ajoutez un film !':''}</p></div>`;return;}
+  g.innerHTML=list.map(f=>`
+    <div class="fcard" onclick="ofd(${f.id})">
+      <div class="fthumb">
+        <span class="femoji">${f.emoji}</span>
+        <div class="fovr"><div class="fplay">▶</div></div>
+        <span class="fbadge fb-free">Gratuit</span>
+        ${f.isNew?'<span class="fbadge fb-new">Nouveau</span>':''}
+        ${f.type==='serie'?'<span class="fbadge fb-serie">Série</span>':''}
+      </div>
+      <div class="finfo">
+        <div class="fname">${f.title}</div>
+        <div class="fmeta"><span>${f.year}</span><span>•</span><span>${f.duration}</span><span style="color:#fbbf24">${'★'.repeat(f.rating)}</span></div>
+        <span class="fcat">${f.type}</span>
+        ${isAdmin?`<div class="adm-btns"><button onclick="event.stopPropagation();openAF(${f.id})">✏️ Modifier</button><button onclick="event.stopPropagation();delFilm(${f.id})">🗑</button></div>`:''}
+      </div>
+    </div>`).join('');
+}
+function setFF(f,btn){filmFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderFilms();}
+function ofd(id){
+  const f=films.find(x=>x.id===id);if(!f)return;
+  document.getElementById('fd-thumb').innerHTML=`<span style="font-size:60px">${f.emoji}</span>`;
+  document.getElementById('fd-name').textContent=f.title;
+  document.getElementById('fd-meta').innerHTML=`<span>${f.type}</span><span>•</span><span>${f.year}</span><span>•</span><span>${f.duration}</span><span style="color:#fbbf24">${stars(f.rating)}</span>`;
+  document.getElementById('fd-desc').textContent=f.desc;
+  document.getElementById('fd-acts').innerHTML=`<a class="mp" href="${f.link}" target="_blank">▶ Regarder</a>${f.link2?`<a class="mp" href="${f.link2}" target="_blank" style="background:#6d28d9">Lien 2</a>`:''}<button class="ms" onclick="cfd()">Fermer</button>`;
+  document.getElementById('film-overlay').classList.add('open');
+}
+function cfd(){document.getElementById('film-overlay').classList.remove('open');}
+function openAF(id=null){
+  editFId=id;
+  document.getElementById('afilm-title').textContent=id?'Modifier le film':'Ajouter un film';
+  if(id){
+    const f=films.find(x=>x.id===id);
+    document.getElementById('af-ti').value=f.title;
+    document.getElementById('af-ty').value=f.type;
+    document.getElementById('af-yr').value=f.year;
+    document.getElementById('af-de').value=f.desc;
+    document.getElementById('af-du').value=f.duration;
+    document.getElementById('af-ra').value=f.rating;
+    document.getElementById('af-em').value=f.emoji;
+    document.getElementById('af-li').value=f.link;
+    document.getElementById('af-l2').value=f.link2||'';
+    document.getElementById('af-ne').value=f.isNew?'true':'false';
+    document.getElementById('af-fe').value=f.featured?'true':'false';
+  } else {
+    ['af-ti','af-yr','af-de','af-du','af-li','af-l2'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('af-ty').value='film';document.getElementById('af-ra').value='5';
+    document.getElementById('af-em').value='✝️';document.getElementById('af-ne').value='true';document.getElementById('af-fe').value='false';
+  }
+  document.getElementById('afilm-modal').classList.add('open');
+}
+function saveFilm(){
+  const ti=document.getElementById('af-ti').value.trim();
+  if(!ti){toast('⚠ Entrez un titre','g');return;}
+  const d={title:ti,type:document.getElementById('af-ty').value,year:+document.getElementById('af-yr').value||2024,desc:document.getElementById('af-de').value,duration:document.getElementById('af-du').value||'—',rating:+document.getElementById('af-ra').value,emoji:document.getElementById('af-em').value,link:document.getElementById('af-li').value,link2:document.getElementById('af-l2').value,isNew:document.getElementById('af-ne').value==='true',featured:document.getElementById('af-fe').value==='true'};
+  if(d.featured)films.forEach(f=>f.featured=false);
+  if(editFId){const i=films.findIndex(f=>f.id===editFId);films[i]={...films[i],...d};toast('✓ Film modifié !','v');}
+  else{d.id=Date.now();films.unshift(d);toast('✓ Film ajouté !','v');}
+  saveF();document.getElementById('afilm-modal').classList.remove('open');renderFilms();
+}
+function delFilm(id){if(!confirm('Supprimer ce film ?'))return;films=films.filter(f=>f.id!==id);saveF();renderFilms();toast('🗑 Film supprimé','v');}
+
+// CV BUILDER
+const cvS={exp:[],edu:[],skills:[],langs:[]};
+const cvLvl={'Débutant':20,'Élémentaire':40,'Intermédiaire':60,'Avancé':80,'Bilingue':100};
+let cvBuilt=false;
+function renderCV(){
+  if(cvBuilt)return;cvBuilt=true;
+  const app=document.getElementById('cv-app');
+  app.innerHTML=`<div style="display:flex;height:calc(100vh - 88px);overflow:hidden;">
+    <div style="width:360px;min-width:280px;background:#fff;border-right:1px solid #eee;overflow-y:auto;font-family:Syne,sans-serif;">
+      ${cvsec('👤 Infos personnelles',`
+        ${cvf('cv-n','Nom complet','Rakoto Jean')}${cvf('cv-t','Titre / Poste','Développeur Web')}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">${cvf('cv-ph','Téléphone','+261...')}${cvf('cv-em','Email','email@...')}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">${cvf('cv-ci','Ville','Antananarivo')}${cvf('cv-li','LinkedIn','linkedin.com/...')}</div>
+        <div style="margin-bottom:10px;"><label style="display:block;font-size:10px;font-weight:700;color:#888;margin-bottom:4px;text-transform:uppercase;">Profil</label><textarea id="cv-pr" placeholder="Décrivez-vous..." oninput="cvRen()" style="width:100%;padding:7px 9px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:12px;resize:vertical;min-height:60px;outline:none;"></textarea></div>`,true)}
+      ${cvsec('💼 Expériences','<div id="cv-el"></div><button onclick="cvAE()" style="width:100%;padding:7px;border:1.5px dashed #ddd;background:transparent;border-radius:3px;font-size:11px;color:#bbb;cursor:pointer;font-family:Syne,sans-serif;margin-top:4px;">+ Ajouter</button>')}
+      ${cvsec('🎓 Formation','<div id="cv-edl"></div><button onclick="cvAEd()" style="width:100%;padding:7px;border:1.5px dashed #ddd;background:transparent;border-radius:3px;font-size:11px;color:#bbb;cursor:pointer;font-family:Syne,sans-serif;margin-top:4px;">+ Ajouter</button>')}
+      ${cvsec('⚡ Compétences','<div id="cv-sl" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;"></div><div style="display:flex;gap:7px;"><input id="cv-ski" placeholder="Ex: Excel..." onkeydown="if(event.key===\'Enter\')cvAS()" style="flex:1;padding:7px 9px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:12px;outline:none;"><button onclick="cvAS()" style="padding:7px 12px;background:#1a1a18;color:white;border:none;border-radius:3px;cursor:pointer;font-size:12px;">+</button></div>')}
+      ${cvsec('🌍 Langues','<div id="cv-ll"></div><button onclick="cvAL()" style="width:100%;padding:7px;border:1.5px dashed #ddd;background:transparent;border-radius:3px;font-size:11px;color:#bbb;cursor:pointer;font-family:Syne,sans-serif;margin-top:4px;">+ Ajouter</button>')}
+    </div>
+    <div style="flex:1;overflow-y:auto;background:#f0ede6;display:flex;flex-direction:column;align-items:center;padding:24px 16px;">
+      <button onclick="window.print()" style="margin-bottom:14px;padding:9px 20px;background:#1a1a18;color:white;border:none;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;">⬇ PDF</button>
+      <div id="cv-pv" style="width:100%;max-width:600px;background:white;box-shadow:0 2px 16px rgba(0,0,0,0.10);overflow:hidden;font-family:Syne,sans-serif;"></div>
+    </div>
+  </div>`;
+  cvRen();
+}
+function cvf(id,lbl,ph){return `<div style="margin-bottom:10px;"><label style="display:block;font-size:10px;font-weight:700;color:#888;margin-bottom:4px;text-transform:uppercase;">${lbl}</label><input id="${id}" placeholder="${ph}" oninput="cvRen()" style="width:100%;padding:7px 9px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:12px;outline:none;"></div>`;}
+function cvsec(t,b,open=false){return `<div style="border-bottom:1px solid #f0f0f0;"><div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:${open?'#1a1a18':'#fff'};color:${open?'#fff':'#333'};"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">${t}</span><span>▼</span></div><div style="padding:14px 16px 16px;display:${open?'block':'none'}">${b}</div></div>`;}
+function g(id){return document.getElementById(id)?.value||'';}
+function cvAE(){cvS.exp.push({id:Date.now(),role:'',company:'',period:'',desc:''});cvRF();}
+function cvAEd(){cvS.edu.push({id:Date.now(),degree:'',school:'',year:''});cvRF();}
+function cvAL(){cvS.langs.push({id:Date.now(),name:'',level:'Intermédiaire'});cvRF();}
+function cvAS(){const v=document.getElementById('cv-ski')?.value.trim();if(!v)return;cvS.skills.push(v);document.getElementById('cv-ski').value='';cvRS();cvRen();}
+function cvRS(){const sl=document.getElementById('cv-sl');if(!sl)return;sl.innerHTML=cvS.skills.map((s,i)=>`<span style="background:#f0ede6;padding:3px 9px;border-radius:20px;font-size:11px;display:flex;align-items:center;gap:5px;">${s}<button onclick="cvS.skills.splice(${i},1);cvRS();cvRen()" style="background:none;border:none;cursor:pointer;color:#bbb;font-size:13px;">×</button></span>`).join('');}
+function cvRF(){
+  const el=document.getElementById('cv-el');
+  if(el)el.innerHTML=cvS.exp.map((e,i)=>`<div style="background:#f8f8f8;border-radius:3px;padding:10px 12px;margin-bottom:7px;position:relative;"><button onclick="cvS.exp.splice(${i},1);cvRF();cvRen()" style="position:absolute;top:5px;right:7px;background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;">×</button><input value="${e.role}" placeholder="Poste" oninput="cvS.exp[${i}].role=this.value;cvRen()" style="width:100%;padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;margin-bottom:5px;outline:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px;"><input value="${e.company}" placeholder="Entreprise" oninput="cvS.exp[${i}].company=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;"><input value="${e.period}" placeholder="2021–2023" oninput="cvS.exp[${i}].period=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;"></div><textarea placeholder="Description..." oninput="cvS.exp[${i}].desc=this.value;cvRen()" style="width:100%;padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;resize:vertical;min-height:48px;outline:none;">${e.desc}</textarea></div>`).join('');
+  const el2=document.getElementById('cv-edl');
+  if(el2)el2.innerHTML=cvS.edu.map((e,i)=>`<div style="background:#f8f8f8;border-radius:3px;padding:10px 12px;margin-bottom:7px;position:relative;"><button onclick="cvS.edu.splice(${i},1);cvRF();cvRen()" style="position:absolute;top:5px;right:7px;background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;">×</button><input value="${e.degree}" placeholder="Diplôme" oninput="cvS.edu[${i}].degree=this.value;cvRen()" style="width:100%;padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;margin-bottom:5px;outline:none;"><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;"><input value="${e.school}" placeholder="Établissement" oninput="cvS.edu[${i}].school=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;"><input value="${e.year}" placeholder="2020" oninput="cvS.edu[${i}].year=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;"></div></div>`).join('');
+  const el3=document.getElementById('cv-ll');
+  if(el3)el3.innerHTML=cvS.langs.map((l,i)=>`<div style="background:#f8f8f8;border-radius:3px;padding:9px 11px;margin-bottom:7px;position:relative;"><button onclick="cvS.langs.splice(${i},1);cvRF();cvRen()" style="position:absolute;top:5px;right:7px;background:none;border:none;color:#ccc;cursor:pointer;font-size:15px;">×</button><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;"><input value="${l.name}" placeholder="Français, Malagasy..." oninput="cvS.langs[${i}].name=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;"><select oninput="cvS.langs[${i}].level=this.value;cvRen()" style="padding:6px 8px;border:1px solid #e8e8e8;border-radius:3px;font-family:Syne,sans-serif;font-size:11px;outline:none;">${Object.keys(cvLvl).map(lv=>`<option ${l.level===lv?'selected':''}>${lv}</option>`).join('')}</select></div></div>`).join('');
+}
+function cvRen(){
+  const pv=document.getElementById('cv-pv');if(!pv)return;
+  const n=g('cv-n'),t=g('cv-t'),ph=g('cv-ph'),em=g('cv-em'),ci=g('cv-ci'),li=g('cv-li'),pr=g('cv-pr');
+  const cts=[ph&&`<span>📞 ${ph}</span>`,em&&`<span>✉ ${em}</span>`,ci&&`<span>📍 ${ci}</span>`,li&&`<span>🔗 ${li}</span>`].filter(Boolean).join('&nbsp;&nbsp;');
+  const exH=cvS.exp.length?cvS.exp.map(e=>`<div style="margin-bottom:11px;"><div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:700;">${e.role||'<em style="color:#ddd">Poste</em>'}</span><span style="font-size:9px;color:#999;">${e.period}</span></div><div style="font-size:10px;color:#777;font-style:italic;margin-bottom:2px;">${e.company}</div>${e.desc?`<div style="font-size:10px;color:#555;line-height:1.6;">${e.desc}</div>`:''}</div>`).join(''):`<p style="color:#ccc;font-size:11px;font-style:italic;">Ajouter...</p>`;
+  const edH=cvS.edu.length?cvS.edu.map(e=>`<div style="margin-bottom:9px;"><div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:700;">${e.degree||'<em style="color:#ddd">Diplôme</em>'}</span><span style="font-size:9px;color:#999;">${e.year}</span></div><div style="font-size:10px;color:#777;font-style:italic;">${e.school}</div></div>`).join(''):`<p style="color:#ccc;font-size:11px;font-style:italic;">Ajouter...</p>`;
+  const skH=cvS.skills.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;">${cvS.skills.map(s=>`<span style="background:#f5f3ee;border:1px solid #e5e3e0;padding:2px 7px;border-radius:2px;font-size:9px;color:#666;">${s}</span>`).join('')}</div>`:`<p style="color:#ccc;font-size:11px;font-style:italic;">Ajouter...</p>`;
+  const lgH=cvS.langs.length?cvS.langs.map(l=>`<div style="margin-bottom:7px;"><div style="display:flex;justify-content:space-between;font-size:10px;"><span style="font-weight:700;">${l.name||'Langue'}</span><span style="color:#999;">${l.level}</span></div><div style="height:2.5px;background:#f0ede6;border-radius:2px;margin-top:3px;"><div style="height:100%;background:#c0392b;border-radius:2px;width:${cvLvl[l.level]||0}%"></div></div></div>`).join(''):`<p style="color:#ccc;font-size:11px;font-style:italic;">Ajouter...</p>`;
+  pv.innerHTML=`<div style="background:#1a1a18;color:white;padding:24px 28px 20px;position:relative;"><div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:#c0392b;"></div><div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:900;margin-bottom:2px;">${n||'<span style="opacity:.2">Nom Complet</span>'}</div>${t?`<div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#e8d5a0;margin-bottom:10px;">${t}</div>`:''}<div style="display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:rgba(255,255,255,.6);">${cts||'<span style="opacity:.3">Coordonnées...</span>'}</div></div><div style="display:grid;grid-template-columns:1fr 2px 1.4fr;"><div style="padding:18px 15px;">${pr?`<div style="margin-bottom:16px;"><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c0392b;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f0ede6;">Profil</div><p style="font-family:'Lora',serif;font-size:10px;color:#555;line-height:1.7;">${pr}</p></div>`:''}
+<div style="margin-bottom:16px;"><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c0392b;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f0ede6;">Compétences</div>${skH}</div><div><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c0392b;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f0ede6;">Langues</div>${lgH}</div></div><div style="background:#f0ede6;"></div><div style="padding:18px 18px;"><div style="margin-bottom:16px;"><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c0392b;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f0ede6;">Expériences</div>${exH}</div><div><div style="font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c0392b;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #f0ede6;">Formation</div>${edH}</div></div></div>`;
+  cvRF();cvRS();
+}
+
+function toast(msg,t='g'){const el=document.getElementById('toastEl');el.className='toast '+(t==='g'?'tg':'tv');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
+
+applyP();
+</script>
+</body>
+</html>
